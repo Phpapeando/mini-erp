@@ -72,18 +72,37 @@ php artisan key:generate
 
 ### ✅ 5. Configure o Banco de Dados
 
-- Edite o arquivo `.env` e ajuste as informações:
+#### 🔧 Script para criar banco e usuário no MySQL:
+
+- Acesse seu terminal MySQL como root:
+```bash
+mysql -u root -p
+```
+
+- E cole o seguinte código SQL:
+  
+```sql
+CREATE DATABASE mini_erp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE USER 'erp_user'@'localhost' IDENTIFIED BY 'senhaSegura123';
+
+GRANT ALL PRIVILEGES ON mini_erp.* TO 'erp_user'@'localhost';
+
+FLUSH PRIVILEGES;
+```
+
+- Atualize o arquivo `.env` com as informações:
 
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=nome_do_banco
-DB_USERNAME=usuario
-DB_PASSWORD=senha
+DB_DATABASE=mini_erp
+DB_USERNAME=erp_user
+DB_PASSWORD=senhaSegura123
 ```
 
-- Crie o banco de dados no seu MySQL e execute as migrations:
+- Crie as tabelas em seu banco de dados no seu MySQL executando as migrations:
 
 ```bash
 php artisan migrate
