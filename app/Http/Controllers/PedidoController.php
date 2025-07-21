@@ -82,18 +82,4 @@ class PedidoController extends Controller
             ], 500);
         }
     }
-
-    public function limparHistoricoTeste(): JsonResponse
-    {
-        if (!app()->environment('local')) {
-            abort(404);
-        }
-
-        session()->forget('historico_pedidos');
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Histórico de pedidos limpo com sucesso!'
-        ]);
-    }
 }

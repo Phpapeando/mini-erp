@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Log;
 class EnderecoController extends Controller
 {
     public function __construct(private CepServiceInterface $cepService)
-    {
-
-    }
+    {}
 
     public function buscarCep(BuscarCepRequest $request): JsonResponse
     {

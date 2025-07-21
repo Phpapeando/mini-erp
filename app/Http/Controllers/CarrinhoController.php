@@ -10,19 +10,13 @@ use App\Exceptions\EstoqueInsuficienteException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use Exception;
 
 class CarrinhoController extends Controller
 {
-    private CarrinhoService $carrinhoService;
+    public function __construct(private CarrinhoService $carrinhoService)
+    {}
 
-    public function __construct(CarrinhoService $carrinhoService)
-    {
-        $this->carrinhoService = $carrinhoService;
-    }
-    
-    /**
-     * Adiciona um produto ao carrinho
-     */
     public function adicionar(AdicionarCarrinhoRequest $request): RedirectResponse
     {
         try {
@@ -37,7 +31,7 @@ class CarrinhoController extends Controller
         } catch (EstoqueInsuficienteException $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Erro ao adicionar produto ao carrinho', [
                 'error' => $e->getMessage(),
                 'estoque_id' => $request->estoque_id,
@@ -48,9 +42,6 @@ class CarrinhoController extends Controller
         }
     }
 
-    /**
-     * Exibe o carrinho de compras
-     */
     public function exibir(): View
     {
         $dados = $this->carrinhoService->obterDadosCarrinho();
@@ -58,9 +49,6 @@ class CarrinhoController extends Controller
         return view('produtos.index', $dados);
     }
 
-    /**
-     * Limpa todo o carrinho
-     */
     public function limpar(): RedirectResponse
     {
         try {
@@ -69,7 +57,7 @@ class CarrinhoController extends Controller
             return redirect()->route('produtos.index')
                 ->with('success', 'Carrinho limpo com sucesso!');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Erro ao limpar carrinho', [
                 'error' => $e->getMessage()
             ]);
@@ -78,9 +66,6 @@ class CarrinhoController extends Controller
         }
     }
 
-    /**
-     * Remove um item específico do carrinho
-     */
     public function remover(RemoverCarrinhoRequest $request): RedirectResponse
     {
         try {
@@ -92,7 +77,7 @@ class CarrinhoController extends Controller
                 return back()->withErrors(['error' => 'Produto não encontrado no carrinho.']);
             }
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Erro ao remover item do carrinho', [
                 'error' => $e->getMessage(),
                 'estoque_id' => $request->estoque_id
@@ -102,9 +87,6 @@ class CarrinhoController extends Controller
         }
     }
 
-    /**
-     * Atualiza a quantidade de um item no carrinho
-     */
     public function atualizar(AtualizarCarrinhoRequest $request): RedirectResponse
     {
         try {
@@ -118,7 +100,7 @@ class CarrinhoController extends Controller
         } catch (EstoqueInsuficienteException $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Erro ao atualizar quantidade no carrinho', [
                 'error' => $e->getMessage(),
                 'estoque_id' => $request->estoque_id,
